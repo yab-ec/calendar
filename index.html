@@ -2,97 +2,197 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>営業日カレンダー</title>
-<style>
-  body { font-family: sans-serif; margin: 40px; }
-  .wrapper { display: flex; gap: 40px; }
-  .cal { padding: 25px; border: 1px solid #eee; border-radius: 16px; width: 360px; }
-  .cal h2 { text-align: center; }
-  table { width: 100%; border-collapse: collapse; text-align: center; }
-  th { padding: 8px; color: #555; }
-  td { padding: 10px; border-radius: 50%; }
-  td.closed { background: #ff8a8a; color: #fff; font-weight: bold; }
-  td.today { border: 2px solid #4da3ff; font-weight: bold; }
-  .legend { margin-top: 40px; padding: 20px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
-  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; }
-  .dot.closed { background:#ff8a8a; }
-  .dot.today { background:#4da3ff; }
-</style>
-</head>
+<title>EC 営業日カレンダー</title>
 
+<style>
+    body {
+        font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+        margin: 0;
+        padding: 40px 0;
+        background: #f6f7fb;
+        color: #333;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+
+    .calendar-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .calendar-box {
+        background: #fff;
+        padding: 25px;
+        width: 350px;
+        border-radius: 18px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .calendar-box h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #444;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 16px;
+    }
+
+    th {
+        padding-bottom: 6px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    td {
+        padding: 8px 0;
+        height: 40px;
+        position: relative;
+    }
+
+    td span {
+        z-index: 2;
+        position: relative;
+    }
+
+    /* 休業日（赤まる） */
+    td.closed span {
+        background: #ff7373;
+        color: #fff;
+        padding: 8px 11px;
+        border-radius: 50%;
+    }
+
+    /* 今日の日付（青まる） */
+    td.today span {
+        background: #75b5ff;
+        color: white;
+        padding: 8px 11px;
+        border-radius: 50%;
+    }
+
+    /* 注釈 */
+    .legend {
+        margin-top: 40px;
+        display: inline-block;
+        background: #fff;
+        padding: 20px 30px;
+        border-radius: 14px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        text-align: left;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .legend-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .legend-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .legend-dot.red {
+        background: #ff7373;
+    }
+
+    .legend-dot.blue {
+        background: #75b5ff;
+    }
+</style>
+
+</head>
 <body>
 
-<h1>営業日カレンダー</h1>
+<h1>EC 営業日カレンダー</h1>
 
-<div class="wrapper">
-  <div class="cal">
-    <h2 id="m1-title"></h2>
-    <table>
-      <thead>
-        <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
-      </thead>
-      <tbody id="m1"></tbody>
-    </table>
-  </div>
+<div class="calendar-container">
 
-  <div class="cal">
-    <h2 id="m2-title"></h2>
-    <table>
-      <thead>
-        <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
-      </thead>
-      <tbody id="m2"></tbody>
-    </table>
-  </div>
+    <div class="calendar-box">
+        <h2>2025年 11月</h2>
+        <table>
+            <thead>
+                <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
+            </thead>
+            <tbody id="month11"></tbody>
+        </table>
+    </div>
+
+    <div class="calendar-box">
+        <h2>2025年 12月</h2>
+        <table>
+            <thead>
+                <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
+            </thead>
+            <tbody id="month12"></tbody>
+        </table>
+    </div>
+
 </div>
 
 <div class="legend">
-  <p><span class="dot closed"></span>休業日 ー 発送・お問い合わせ返信を行っておりません</p>
-  <p><span class="dot today"></span>本日</p>
+    <div class="legend-row">
+        <div class="legend-dot red"></div> 休業日…発送・返信は翌営業日以降となります
+    </div>
+    <div class="legend-row">
+        <div class="legend-dot blue"></div> 本日
+    </div>
 </div>
 
 <script>
+const today = new Date();
+const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
 const closedDays = {
-  "2025-11": [3, 10, 17, 24],
-  "2025-12": [1, 8, 15, 22]
+    "2025-11": [3, 10, 17, 24],
+    "2025-12": [1, 8, 22]
 };
 
-function createCalendar(year, month, id){
-  const tbody = document.getElementById(id);
-  const title = document.getElementById(id+"-title".replace("m","m1").replace("m",""));
+function generateCalendar(year, month, elementId) {
+    const firstDate = new Date(year, month-1, 1);
+    const lastDay = new Date(year, month, 0).getDate();
+    const tbody = document.getElementById(elementId);
+    let html = "<tr>";
 
-  const date = new Date(year, month-1, 1);
-  const last = new Date(year, month, 0).getDate();
-
-  document.getElementById(id+"-title").textContent = `${year}年 ${month}月`;
-
-  let html = "<tr>";
-  for(let i=0;i<date.getDay();i++) html += "<td></td>";
-
-  const today = new Date();
-  const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
-
-  for(let d=1; d<=last; d++){
-    const dStr = `${year}-${month}-${d}`;
-    let cls = "";
-
-    if(closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
-    if(dStr === todayStr) cls = "today";
-
-    html += `<td class="${cls}">${d}</td>`;
-
-    if(new Date(year, month-1, d).getDay() === 6){
-      html += "</tr><tr>";
+    for (let i = 0; i < firstDate.getDay(); i++) {
+        html += "<td></td>";
     }
-  }
-  html += "</tr>";
 
-  tbody.innerHTML = html;
+    for (let d = 1; d <= lastDay; d++) {
+        const dateStr = `${year}-${month}-${d}`;
+        let cls = "";
+
+        if (closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
+        if (dateStr === todayStr) cls = "today";
+
+        html += `<td class="${cls}"><span>${d}</span></td>`;
+
+        if (new Date(year, month-1, d).getDay() === 6) html += "</tr><tr>";
+    }
+
+    html += "</tr>";
+    tbody.innerHTML = html;
 }
 
-createCalendar(2025, 11, "m1");
-createCalendar(2025, 12, "m2");
+generateCalendar(2025, 11, "month11");
+generateCalendar(2025, 12, "month12");
 </script>
-
 </body>
 </html>
