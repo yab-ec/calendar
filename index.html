@@ -1,198 +1,441 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<title>EC 営業日カレンダー</title>
+  <meta charset="UTF-8" />
+  <title>EC営業日カレンダー | VALUABLE CARD TOKYO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style>
+  <style>
+    :root {
+      --bg-page: #f3f4f6;
+      --bg-card: #ffffff;
+      --border-card: #e5e7eb;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --text-muted: #9ca3af;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.1);
+      --danger: #f97373;
+      --danger-soft: rgba(248, 113, 113, 0.14);
+      --today-ring: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-        font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
-        margin: 0;
-        padding: 40px 0;
-        background: #f6f7fb;
-        color: #333;
-        text-align: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background: radial-gradient(circle at top, #e5edff 0, #f3f4f6 55%, #e5e7eb 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 32px 16px 56px;
+      display: flex;
+      justify-content: center;
     }
 
-    h1 {
-        margin-bottom: 30px;
-        font-size: 28px;
-        font-weight: 600;
+    .vc-page {
+      width: 100%;
+      max-width: 1080px;
     }
 
-    .calendar-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        gap: 40px;
-        justify-content: center;
-        flex-wrap: wrap;
+    .vc-header {
+      margin-bottom: 28px;
     }
 
-    .calendar-box {
-        background: #fff;
-        padding: 25px;
-        width: 350px;
-        border-radius: 18px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    .vc-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
     }
 
-    .calendar-box h2 {
-        font-size: 22px;
-        margin-bottom: 10px;
-        font-weight: 700;
-        color: #444;
+    .vc-title-badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(37, 99, 235, 0.4);
     }
 
-    table {
+    .vc-subtitle {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    .vc-calendars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 16px;
+    }
+
+    .vc-calendar {
+      background: var(--bg-card);
+      border-radius: 18px;
+      border: 1px solid var(--border-card);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 20px;
+      width: 320px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vc-calendar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.06), transparent 55%);
+      pointer-events: none;
+    }
+
+    .vc-calendar-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .vc-month-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .vc-month-label {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .vc-month-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .vc-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .vc-weekday {
+      text-align: center;
+      padding: 4px 0;
+      font-weight: 600;
+    }
+
+    .vc-weekday.is-sun {
+      color: #f97373;
+    }
+
+    .vc-weekday.is-sat {
+      color: #3b82f6;
+    }
+
+    .vc-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      font-size: 0.82rem;
+    }
+
+    .vc-day {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: 999px;
+      transition: background 0.15s ease, transform 0.1s ease,
+        box-shadow 0.15s ease;
+      cursor: default;
+      color: var(--text-main);
+    }
+
+    .vc-day span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .vc-day.is-empty {
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    .vc-day.is-sun {
+      color: #ef4444;
+    }
+
+    .vc-day.is-sat {
+      color: #2563eb;
+    }
+
+    .vc-day.is-today {
+      box-shadow: 0 0 0 2px var(--today-ring);
+      background: #eff6ff;
+      font-weight: 700;
+      color: #1d4ed8;
+    }
+
+    .vc-day.is-closed {
+      background: var(--danger-soft);
+      color: #b91c1c;
+      font-weight: 600;
+    }
+
+    .vc-day:not(.is-empty):not(.is-closed):not(.is-today):hover {
+      background: #f3f4ff;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+    }
+
+    .vc-legend-card {
+      margin: 26px auto 0;
+      max-width: 720px;
+      background: rgba(248, 250, 252, 0.92);
+      border-radius: 16px;
+      padding: 14px 16px 16px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+      backdrop-filter: blur(10px);
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    .vc-legend-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+
+    .vc-legend-body {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 24px;
+      align-items: center;
+      line-height: 1.7;
+    }
+
+    .vc-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .vc-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+    }
+
+    .vc-dot.closed {
+      background: var(--danger);
+      box-shadow: 0 0 0 2px var(--danger-soft);
+    }
+
+    .vc-dot.today {
+      background: var(--today-ring);
+      box-shadow: 0 0 0 2px var(--accent-soft);
+    }
+
+    .vc-legend-note {
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 20px 10px 40px;
+      }
+
+      .vc-title {
+        font-size: 1.35rem;
+      }
+
+      .vc-calendars {
+        gap: 16px;
+      }
+
+      .vc-calendar {
         width: 100%;
-        border-collapse: collapse;
-        font-size: 16px;
+        max-width: 380px;
+      }
     }
-
-    th {
-        padding-bottom: 6px;
-        font-weight: 600;
-        color: #666;
-    }
-
-    td {
-        padding: 8px 0;
-        height: 40px;
-        position: relative;
-    }
-
-    td span {
-        z-index: 2;
-        position: relative;
-    }
-
-    /* 休業日（赤まる） */
-    td.closed span {
-        background: #ff7373;
-        color: #fff;
-        padding: 8px 11px;
-        border-radius: 50%;
-    }
-
-    /* 今日の日付（青まる） */
-    td.today span {
-        background: #75b5ff;
-        color: white;
-        padding: 8px 11px;
-        border-radius: 50%;
-    }
-
-    /* 注釈 */
-    .legend {
-        margin-top: 40px;
-        display: inline-block;
-        background: #fff;
-        padding: 20px 30px;
-        border-radius: 14px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        text-align: left;
-        font-size: 16px;
-        line-height: 1.6;
-    }
-
-    .legend-row {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-
-    .legend-dot {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        margin-right: 8px;
-    }
-
-    .legend-dot.red {
-        background: #ff7373;
-    }
-
-    .legend-dot.blue {
-        background: #75b5ff;
-    }
-</style>
-
+  </style>
 </head>
 <body>
+  <main class="vc-page">
+    <header class="vc-header">
+      <h1 class="vc-title">
+        EC営業日カレンダー
+        <span class="vc-title-badge">ONLINE SHOP</span>
+      </h1>
+      <p class="vc-subtitle">
+        発送業務・お問い合わせへのご返信がお休みの日をカレンダー形式でご案内します。<br />
+        ご注文やお問い合わせ自体は、365日いつでも受け付けております。
+      </p>
+    </header>
 
-<h1>EC 営業日カレンダー</h1>
+    <section class="vc-calendars" aria-label="営業日カレンダー">
+      <!-- 今月 -->
+      <article class="vc-calendar" aria-label="当月の営業日">
+        <div class="vc-calendar-inner">
+          <div class="vc-month-row">
+            <div>
+              <div class="vc-month-label" id="monthLabel0"></div>
+              <div class="vc-month-sub">CURRENT MONTH</div>
+            </div>
+          </div>
+          <div class="vc-weekdays">
+            <div class="vc-weekday is-sun">日</div>
+            <div class="vc-weekday">月</div>
+            <div class="vc-weekday">火</div>
+            <div class="vc-weekday">水</div>
+            <div class="vc-weekday">木</div>
+            <div class="vc-weekday">金</div>
+            <div class="vc-weekday is-sat">土</div>
+          </div>
+          <div class="vc-days" id="days0"></div>
+        </div>
+      </article>
 
-<div class="calendar-container">
+      <!-- 来月 -->
+      <article class="vc-calendar" aria-label="翌月の営業日">
+        <div class="vc-calendar-inner">
+          <div class="vc-month-row">
+            <div>
+              <div class="vc-month-label" id="monthLabel1"></div>
+              <div class="vc-month-sub">NEXT MONTH</div>
+            </div>
+          </div>
+          <div class="vc-weekdays">
+            <div class="vc-weekday is-sun">日</div>
+            <div class="vc-weekday">月</div>
+            <div class="vc-weekday">火</div>
+            <div class="vc-weekday">水</div>
+            <div class="vc-weekday">木</div>
+            <div class="vc-weekday">金</div>
+            <div class="vc-weekday is-sat">土</div>
+          </div>
+          <div class="vc-days" id="days1"></div>
+        </div>
+      </article>
+    </section>
 
-    <div class="calendar-box">
-        <h2>2025年 11月</h2>
-        <table>
-            <thead>
-                <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
-            </thead>
-            <tbody id="month11"></tbody>
-        </table>
-    </div>
+    <section class="vc-legend-card" aria-label="カレンダーの凡例">
+      <div class="vc-legend-title">
+        営業日・休業日のご案内
+      </div>
+      <div class="vc-legend-body">
+        <div class="vc-legend-item">
+          <span class="vc-dot closed"></span>
+          <span>休業日 … 当店からの<span style="font-weight:600;">発送</span>・<span style="font-weight:600;">お問い合わせのご返信</span>はお休みです。</span>
+        </div>
+        <div class="vc-legend-item">
+          <span class="vc-dot today"></span>
+          <span>本日</span>
+        </div>
+      </div>
+      <p class="vc-legend-note">
+        ※休業日でも、オンラインショップからのご注文・お問い合わせ送信はいつでも可能です。<br />
+        ※スケジュールは予告なく変更となる場合がございます。最新の情報は本ページをご確認ください。
+      </p>
+    </section>
+  </main>
 
-    <div class="calendar-box">
-        <h2>2025年 12月</h2>
-        <table>
-            <thead>
-                <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
-            </thead>
-            <tbody id="month12"></tbody>
-        </table>
-    </div>
+  <script>
+    // ===============================
+    // 休業日の設定（ここだけ編集すればOK）
+    // フォーマット: "YYYY-MM-DD"
+    // 例: 2025年11月3日 → "2025-11-03"
+    // ===============================
+    const CLOSED_DAYS = [
+      // --- ここから任意に追加・削除してください ---
+      "2025-11-03",
+      "2025-11-10",
+      "2025-11-17",
+      "2025-11-24",
+      "2025-12-01",
+      "2025-12-08",
+      "2025-12-15",
+      "2025-12-22",
+      "2025-12-29"
+      // --- ここまで ---
+    ];
 
-</div>
+    const today = new Date();
 
-<div class="legend">
-    <div class="legend-row">
-        <div class="legend-dot red"></div> 休業日…発送・返信は翌営業日以降となります
-    </div>
-    <div class="legend-row">
-        <div class="legend-dot blue"></div> 本日
-    </div>
-</div>
-
-<script>
-const today = new Date();
-const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
-
-const closedDays = {
-    "2025-11": [3, 10, 17, 24],
-    "2025-12": [1, 8, 22]
-};
-
-function generateCalendar(year, month, elementId) {
-    const firstDate = new Date(year, month-1, 1);
-    const lastDay = new Date(year, month, 0).getDate();
-    const tbody = document.getElementById(elementId);
-    let html = "<tr>";
-
-    for (let i = 0; i < firstDate.getDay(); i++) {
-        html += "<td></td>";
+    function pad(num) {
+      return num.toString().padStart(2, "0");
     }
 
-    for (let d = 1; d <= lastDay; d++) {
-        const dateStr = `${year}-${month}-${d}`;
-        let cls = "";
+    function buildCalendar(offset, daysId, labelId) {
+      const current = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+      const year = current.getFullYear();
+      const month = current.getMonth(); // 0-11
+      const monthLabel = document.getElementById(labelId);
+      const daysContainer = document.getElementById(daysId);
 
-        if (closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
-        if (dateStr === todayStr) cls = "today";
+      if (!monthLabel || !daysContainer) return;
 
-        html += `<td class="${cls}"><span>${d}</span></td>`;
+      monthLabel.textContent = `${year}年 ${month + 1}月`;
 
-        if (new Date(year, month-1, d).getDay() === 6) html += "</tr><tr>";
+      const firstDay = new Date(year, month, 1).getDay(); // 0=日
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      let html = "";
+
+      // 空白セル（前月分）
+      for (let i = 0; i < firstDay; i++) {
+        html += `<div class="vc-day is-empty"></div>`;
+      }
+
+      // 日付セル
+      for (let date = 1; date <= lastDate; date++) {
+        const weekday = (firstDay + date - 1) % 7;
+        const dateStr = `${year}-${pad(month + 1)}-${pad(date)}`;
+
+        const isToday =
+          year === today.getFullYear() &&
+          month === today.getMonth() &&
+          date === today.getDate();
+
+        const isClosed = CLOSED_DAYS.includes(dateStr);
+
+        let cls = "vc-day";
+
+        if (weekday === 0) cls += " is-sun";
+        if (weekday === 6) cls += " is-sat";
+        if (isToday) cls += " is-today";
+        if (isClosed) cls += " is-closed";
+
+        html += `<div class="${cls}"><span>${date}</span></div>`;
+      }
+
+      daysContainer.innerHTML = html;
     }
 
-    html += "</tr>";
-    tbody.innerHTML = html;
-}
-
-generateCalendar(2025, 11, "month11");
-generateCalendar(2025, 12, "month12");
-</script>
+    // 当月（オフセット0）と翌月（オフセット1）を生成
+    buildCalendar(0, "days0", "monthLabel0");
+    buildCalendar(1, "days1", "monthLabel1");
+  </script>
 </body>
 </html>
