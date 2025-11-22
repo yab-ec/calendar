@@ -1,204 +1,229 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ONLINE SHOP 営業日カレンダー</title>
+
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        font-family: "Roboto", "Noto Sans JP", sans-serif;
-        background: #f6f6f6;
-        margin: 0;
-        padding: 20px;
-        text-align: center;
-    }
+/* ====== 基本スタイル ====== */
+body {
+    font-family: 'Roboto','Noto Sans JP', sans-serif;
+    background: #f7f7f7;
+    margin: 0;
+    padding: 40px 0;
+    text-align: center;
+    color: #333;
+}
 
-    h1 {
-        font-size: 28px;
-        margin-bottom: 30px;
-        font-weight: 500;
-    }
+h1 {
+    font-size: 26px;
+    margin-bottom: 35px;
+    font-weight: 600;
+}
 
-    .calendar-wrap {
-        display: flex;
-        gap: 40px;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+/* ====== カレンダーボックス ====== */
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
 
-    .calendar-box {
-        background: #fff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-        width: 370px;
-    }
+.calendar-box {
+    background: #ffffff;
+    width: 420px;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
 
-    table {
-        width: 100%;
-        font-size: 16px;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
+.calendar-box h2 {
+    font-size: 20px;
+    margin-bottom: 18px;
+    font-weight: 600;
+    color: #222;
+}
 
-    th {
-        padding-bottom: 10px;
-        font-weight: 500;
-        color: #555;
-    }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
 
-    td {
-        height: 42px;
-        border-radius: 50%;
-        cursor: default;
-        color: #444;
-    }
+th {
+    color: #666;
+    padding-bottom: 8px;
+    font-weight: 500;
+}
 
-    td.today {
-        background: #cfe9ff;
-        font-weight: 500;
-        color: #0066cc;
-    }
+td {
+    height: 42px;
+    width: 42px;
+    border-radius: 50%;
+    margin: auto;
+    color: #444;
+}
 
-    td.closed {
-        background: #ffb3b3;
-        color: #fff;
-        font-weight: 600;
-    }
+/* 今日 */
+.today {
+    background: #d8ecff;
+    border: 2px solid #9ccfff;
+    color: #005bbb;
+    font-weight: bold;
+}
 
-    /* 下の案内 */
-    .notice-box {
-        width: 80%;
-        max-width: 900px;
-        margin: 50px auto 0;
-        background: #fff;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-        text-align: left;
-        font-size: 16px;
-    }
+/* 休業日（赤丸） */
+.closed {
+    background: #ff8b8b;
+    color: #fff !important;
+    font-weight: 600;
+}
 
-    .notice-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 15px;
-    }
+/* ====== 下の説明ボックス ====== */
+.info-box {
+    width: 85%;
+    max-width: 880px;
+    margin: 45px auto 0;
+    background: #fff;
+    padding: 30px 32px;
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: left;
+    line-height: 1.7;
+}
 
-    .legend {
-        margin: 10px 0 20px;
-    }
+.info-box h3 {
+    font-size: 19px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
 
-    .dot {
-        display: inline-block;
-        width: 13px;
-        height: 13px;
-        border-radius: 50%;
-        margin-right: 6px;
-    }
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
 
-    .dot-closed { background: #ff8a8a; }
-    .dot-today { background: #6bb6ff; }
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.dot-red { background: #ff6b6b; }
+.dot-blue { background: #3f8bff; }
 
 </style>
 </head>
+
 <body>
 
 <h1>ONLINE SHOP 営業日カレンダー</h1>
 
-<div class="calendar-wrap">
+<div class="calendar-container">
+
+    <!-- 1ヶ月目 -->
     <div class="calendar-box">
-        <h2 id="month1-title"></h2>
+        <h2 id="m1-title"></h2>
         <table>
             <thead>
                 <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
             </thead>
-            <tbody id="month1"></tbody>
+            <tbody id="m1"></tbody>
         </table>
     </div>
 
+    <!-- 2ヶ月目 -->
     <div class="calendar-box">
-        <h2 id="month2-title"></h2>
+        <h2 id="m2-title"></h2>
         <table>
             <thead>
                 <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
             </thead>
-            <tbody id="month2"></tbody>
+            <tbody id="m2"></tbody>
         </table>
     </div>
+
 </div>
 
-<div class="notice-box">
-    <div class="notice-title">営業日・休業日のご案内</div>
+<!-- ====== 説明エリア ====== -->
+<div class="info-box">
+    <h3>営業日・休業日のご案内</h3>
 
-    <div class="legend">
-        <span class="dot dot-closed"></span>休業日（発送・お問い合わせへのご返信はお休みです）<br>
-        <span class="dot dot-today"></span>本日
+    <div class="legend-item">
+        <span class="dot dot-red"></span>休業日
+    </div>
+    <div style="margin-left:24px; color:#555; font-size:14px;">発送業務・お問い合わせへのご返信は原則お休みです。</div>
+
+    <div class="legend-item" style="margin-top:14px;">
+        <span class="dot dot-blue"></span>本日
     </div>
 
-    ご注文およびお問い合わせの送信自体は <b>365日いつでも受け付けております。</b>
+    <p style="margin-top:20px;">
+        ご注文およびお問い合わせの送信自体は  
+        <strong>365日いつでも受け付けております。</strong>
+    </p>
 </div>
+
 
 <script>
-// ▼ 日本の祝日（必要に応じて毎年更新）
-const jpHolidays = [
-    "2025-01-01", "2025-01-13",
-    "2025-02-11", "2025-02-23",
-    "2025-03-20",
-    "2025-04-29",
-    "2025-05-03", "2025-05-04", "2025-05-05",
-    "2025-07-21",
-    "2025-08-11",
-    "2025-09-15", "2025-09-23",
-    "2025-10-13",
-    "2025-11-03", "2025-11-23"
+// ▼ 祝日（2025年11〜12月）
+const holidays = [
+    "2025-11-03",
+    "2025-11-23"
 ];
 
-// ▼ 月のカレンダー生成
-function generateCalendar(year, month, boxId, titleId) {
-    const firstDay = new Date(year, month, 1);
-    const lastDate = new Date(year, month + 1, 0).getDate();
+// ▼ 指定月のカレンダー生成
+function createCalendar(year, month, bodyId, titleId) {
+    const first = new Date(year, month, 1);
+    const last = new Date(year, month + 1, 0).getDate();
 
-    document.getElementById(titleId).textContent = `${year}年 ${month + 1}月`;
+    document.getElementById(titleId).textContent = `${year}年 ${month+1}月`;
 
     let html = "<tr>";
-    let dayOfWeek = firstDay.getDay();
+    for (let i=0; i<first.getDay(); i++) html += "<td></td>";
 
-    for (let i = 0; i < dayOfWeek; i++) html += "<td></td>";
+    const today = new Date();
+    const todayStr =
+        `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-    for (let date = 1; date <= lastDate; date++) {
-
-        const current = new Date(year, month, date);
-        const ymd = `${year}-${String(month+1).padStart(2,"0")}-${String(date).padStart(2,"0")}`;
+    for (let d=1; d<=last; d++) {
+        const dateStr =
+            `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+        const dow = new Date(year, month, d).getDay();
 
         let cls = "";
 
         // 今日
-        const today = new Date();
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
-        if (ymd === todayStr) cls = "today";
+        if (dateStr === todayStr) cls = "today";
 
-        // 自動休業日（土日）
-        if (current.getDay() === 0 || current.getDay() === 6) cls = "closed";
+        // 土日 → 自動休業
+        if (dow === 0 || dow === 6) cls = "closed";
 
-        // 日本の祝日
-        if (jpHolidays.includes(ymd)) cls = "closed";
+        // 祝日 → 休業扱い（赤丸）
+        if (holidays.includes(dateStr)) cls = "closed";
 
-        html += `<td class="${cls}">${date}</td>`;
+        html += `<td class="${cls}">${d}</td>`;
 
-        if (current.getDay() === 6) html += "</tr><tr>";
+        if (dow === 6) html += "</tr><tr>";
     }
 
     html += "</tr>";
-    document.getElementById(boxId).innerHTML = html;
+    document.getElementById(bodyId).innerHTML = html;
 }
 
-// ▼ 表示する2ヶ月
+
+// ▼ 表示対象（月1・月2）
 const now = new Date();
-generateCalendar(now.getFullYear(), now.getMonth(), "month1", "month1-title");
+createCalendar(now.getFullYear(), now.getMonth(), "m1", "m1-title");
 
 const next = new Date(now.getFullYear(), now.getMonth()+1, 1);
-generateCalendar(next.getFullYear(), next.getMonth(), "month2", "month2-title");
+createCalendar(next.getFullYear(), next.getMonth(), "m2", "m2-title");
 </script>
 
 </body>
