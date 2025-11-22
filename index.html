@@ -39,12 +39,11 @@ h1 {
     padding: 28px;
     border-radius: 20px;
     background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    box-shadow: 
+    box-shadow:
         8px 8px 20px rgba(0,0,0,0.10),
         -4px -4px 12px rgba(255,255,255,0.8);
 }
 
-/* 見出し */
 .calendar-box h2 {
     font-size: 20px;
     font-weight: 600;
@@ -73,54 +72,58 @@ td {
     vertical-align: middle;
     color: #444;
     font-weight: 400;
-    transition: none !important; /* ← ホバーの凹み完全OFF */
+    transition: none; /* ← ふわっと凹むエフェクト完全無効 */
 }
 
-/* ホバー効果削除 */
-td:hover {
-    background: none !important;
-    cursor: default;
-}
+/* ← ホバー反応なし */
+td:hover {}
 
-/* 今日（青） */
+/* 本日（青枠で塗りつぶしなし） */
 .today {
-    background: radial-gradient(circle at 30% 30%, #a7d4ff, #5aaaff);
-    color: #fff !important;
-    font-weight: 600;
+    background: none !important;
+    border: 2px solid #5aaaff !important;
+    color: #5aaaff !important;
+    font-weight: 700;
+    box-shadow: none !important;
 }
 
-/* 休業日（赤） */
+/* 休業日：赤グラデ */
 .closed {
     background: radial-gradient(circle at 30% 30%, #ffb4b4, #ff6b6b);
     color: #fff !important;
     font-weight: 600;
 }
 
-/* 説明エリア */
+/* 下部説明エリア */
 .info-box {
     width: 90%;
     max-width: 900px;
     margin: 45px auto 0;
     padding: 30px 35px;
     border-radius: 20px;
+
     background: #ffffff;
-    box-shadow: 
+    box-shadow:
         8px 8px 20px rgba(0,0,0,0.10),
         -4px -4px 12px rgba(255,255,255,0.9);
     text-align: left;
     line-height: 1.75;
 }
 
-/* マーカー横並び */
+.info-box h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+/* マーカー説明（横並び） */
 .legend-row {
     display: flex;
-    align-items: center;
     gap: 25px;
     margin-bottom: 18px;
 }
 
-/* マーカー個別 */
-.legend-item-inline {
+.legend-item {
     display: flex;
     align-items: center;
 }
@@ -129,7 +132,7 @@ td:hover {
     width: 15px;
     height: 15px;
     border-radius: 12px;
-    margin-right: 8px;
+    margin-right: 10px;
 }
 
 .dot-red {
@@ -137,7 +140,7 @@ td:hover {
 }
 
 .dot-blue {
-    background: radial-gradient(circle at 30% 30%, #a7d4ff, #5aaaff);
+    background: #5aaaff;
 }
 </style>
 </head>
@@ -166,35 +169,30 @@ td:hover {
 
 </div>
 
-<!-- ▼説明エリア（順番変更＆横並び） -->
 <div class="info-box">
+    <h3>営業日・休業日のご案内</h3>
 
-    <!-- 横並びマーカー -->
     <div class="legend-row">
-        <div class="legend-item-inline">
-            <span class="dot dot-red"></span> 休業日
-        </div>
-        <div class="legend-item-inline">
-            <span class="dot dot-blue"></span> 本日
-        </div>
+        <div class="legend-item"><span class="dot dot-red"></span>休業日</div>
+        <div class="legend-item"><span class="dot dot-blue"></span>本日</div>
     </div>
 
-    <p><strong>休業日＝発送・お問い合わせへの返信不可日となります。</strong></p>
+    <p><strong>休業日 ＝ 発送・お問い合わせへの返信不可日となります。</strong></p>
 
-    <p>ご注文およびお問い合わせの送信自体は、
+    <p>
+        ご注文およびお問い合わせの送信自体は、
         <strong>365日24時間いつでも受け付けております。</strong>
     </p>
-
 </div>
 
 <script>
-/* 祝日データ */
+/* 祝日データ（2025年11〜12月）*/
 const holidays = [
     "2025-11-03",
     "2025-11-23"
 ];
 
-/* カレンダー生成 */
+/* カレンダー作成関数 */
 function createCalendar(year, month, bodyId, titleId) {
     const first = new Date(year, month, 1);
     const last = new Date(year, month + 1, 0).getDate();
@@ -211,9 +209,14 @@ function createCalendar(year, month, bodyId, titleId) {
         const dow = new Date(year, month, d).getDay();
         let cls = "";
 
-        if (dow === 0 || dow === 6) cls = "closed";      // 土日
-        if (holidays.includes(dateStr)) cls = "closed";  // 祝日
-        if (dateStr === todayStr) cls = "today";         // 今日（最優先）
+        /* 土日 → 休業 */
+        if (dow === 0 || dow === 6) cls = "closed";
+
+        /* 祝日 → 休業 */
+        if (holidays.includes(dateStr)) cls = "closed";
+
+        /* 今日 → 最優先で青枠 */
+        if (dateStr === todayStr) cls = "today";
 
         html += `<td class="${cls}">${d}</td>`;
         if (dow === 6) html += "</tr><tr>";
@@ -225,7 +228,8 @@ function createCalendar(year, month, bodyId, titleId) {
 
 const now = new Date();
 createCalendar(now.getFullYear(), now.getMonth(), "m1", "m1-title");
-const next = new Date(now.getFullYear(), now.getMonth()+1);
+
+const next = new Date(now.getFullYear(), now.getMonth()+1, 1);
 createCalendar(next.getFullYear(), next.getMonth(), "m2", "m2-title");
 </script>
 
