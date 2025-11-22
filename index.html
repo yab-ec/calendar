@@ -2,218 +2,209 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>ONLINE SHOP 営業日カレンダー</title>
 
-<!-- Google Fonts（おちゃのこに合わせて Roboto + Noto Sans）-->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- フォント（Roboto + Noto Sans JP） -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-    body {
-        font-family: 'Roboto', 'Noto Sans JP', sans-serif;
-        background: #fafafa;
-        margin: 0;
-        padding: 40px 0;
-        color: #333;
-    }
+body {
+  font-family: "Roboto", "Noto Sans JP", sans-serif;
+  background: #fafafa;
+  margin: 40px auto;
+  max-width: 1100px;
+  text-align: center;
+  color: #333;
+}
 
-    h1 {
-        text-align: center;
-        font-size: 26px;
-        margin-bottom: 30px;
-        font-weight: 500;
-    }
+h1 {
+  font-size: 26px;
+  margin-bottom: 35px;
+  font-weight: 600;
+}
 
-    .vc-calendar-wrapper {
-        max-width: 1100px;
-        margin: auto;
-        padding: 0 20px;
-    }
+/* ---- カレンダーボックス ---- */
+.vc-calendars {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 35px;
+  margin-bottom: 40px;
+}
 
-    /* カレンダー2ヶ月 横並び */
-    .vc-calendars {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 30px;
-    }
+.vc-calendar-box {
+  background: #fff;
+  padding: 25px;
+  width: 480px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
 
-    .vc-calendar-box {
-        background: #fff;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        flex: 1;
-        min-width: 320px;
-    }
+.vc-calendar-box h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
 
-    .vc-calendar-box h2 {
-        font-size: 20px;
-        margin-bottom: 12px;
-        text-align: center;
-        font-weight: 500;
-        color: #333;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: center;
-        font-size: 15px;
-    }
+th {
+  padding-bottom: 10px;
+  color: #666;
+  font-weight: 500;
+}
 
-    th {
-        padding-bottom: 8px;
-        color: #444;
-        font-weight: 500;
-    }
+td {
+  padding: 10px 0;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  margin: auto;
+}
 
-    td {
-        padding: 10px 0;
-        border-radius: 8px;
-        font-weight: 400;
-    }
+/* 今日 */
+.today {
+  background: #d8ecff;
+  font-weight: bold;
+  border: 2px solid #9cd2ff;
+}
 
-    /* 休業日 */
-    .closed {
-        background: #ff7b7b;
-        color: #fff !important;
-        font-weight: 500;
-    }
+/* 休業日 */
+.closed {
+  background: #ff8a8a;
+  color: white !important;
+}
 
-    /* 今日 */
-    .today {
-        background: #cfe8ff;
-        font-weight: 500;
-    }
+/* ---- 説明ボックス ---- */
+.vc-legend-box {
+  background: #fff;
+  padding: 30px;
+  margin: 0 auto;
+  width: 85%;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  text-align: left;
+}
 
-    /* 説明BOX */
-    .legend {
-        max-width: 700px;
-        margin: 45px auto 0;
-        background: #fff;
-        padding: 25px 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        font-size: 15px;
-        line-height: 1.7;
-    }
+.vc-legend-box h3 {
+  font-size: 19px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
 
-    .legend h3 {
-        margin-top: 0;
-        font-size: 18px;
-        font-weight: 500;
-    }
+.vc-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 15px;
+}
 
-    .legend-row {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-        gap: 10px;
-    }
+.vc-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+}
 
-    .dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-    }
+.vc-dot.closed { background: #ff8a8a; }
+.vc-dot.today { background: #6bb8ff; }
 
-    .dot-red {
-        background: #ff7b7b;
-    }
-
-    .dot-blue {
-        background: #4da3ff;
-    }
+footer {
+  margin-top: 25px;
+  font-size: 13px;
+  color: #666;
+}
 </style>
 </head>
+
 <body>
 
 <h1>ONLINE SHOP 営業日カレンダー</h1>
 
-<div class="vc-calendar-wrapper">
-    <div class="vc-calendars">
+<div class="vc-calendars">
+  <!-- 11月 -->
+  <div class="vc-calendar-box">
+    <h2>2025年 11月</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>日</th><th>月</th><th>火</th><th>水</th>
+          <th>木</th><th>金</th><th>土</th>
+        </tr>
+      </thead>
+      <tbody id="month11"></tbody>
+    </table>
+  </div>
 
-        <!-- ▼ 11月カレンダー -->
-        <div class="vc-calendar-box">
-            <h2>2025年 11月</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
-                    </tr>
-                </thead>
-                <tbody id="month11"></tbody>
-            </table>
-        </div>
-
-        <!-- ▼ 12月カレンダー -->
-        <div class="vc-calendar-box">
-            <h2>2025年 12月</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
-                    </tr>
-                </thead>
-                <tbody id="month12"></tbody>
-            </table>
-        </div>
-
-    </div>
+  <!-- 12月 -->
+  <div class="vc-calendar-box">
+    <h2>2025年 12月</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>日</th><th>月</th><th>火</th><th>水</th>
+          <th>木</th><th>金</th><th>土</th>
+        </tr>
+      </thead>
+      <tbody id="month12"></tbody>
+    </table>
+  </div>
 </div>
 
-<!-- ▼ 説明エリア -->
-<div class="legend">
-    <h3>営業日・休業日のご案内</h3>
+<div class="vc-legend-box">
+  <h3>営業日・休業日のご案内</h3>
 
-    <p>
-        発送業務・お問い合わせへのご返信がお休みの日をカレンダー形式でご案内いたします。  
-        ご注文やお問い合わせ自体は <strong>365日いつでも受け付けております</strong>。
-    </p>
+  <div class="vc-legend-row">
+    <span class="vc-dot closed"></span> 休業日（発送・お問い合わせへのご返信は原則お休みです）
+  </div>
 
-    <div class="legend-row">
-        <div class="dot dot-red"></div> 休業日（発送・返信業務はお休みです）
-    </div>
-    <div class="legend-row">
-        <div class="dot dot-blue"></div> 本日
-    </div>
+  <div class="vc-legend-row">
+    <span class="vc-dot today"></span> 本日
+  </div>
+
+  <p style="margin-top:15px; line-height:1.7;">
+    ご注文およびお問い合わせの送信自体は
+    <strong>365日いつでも受け付けております。</strong>
+  </p>
 </div>
+
+<footer>© ONLINE SHOP</footer>
 
 <script>
-/* ---- 休業日データ ---- */
-const closedDays = {
-    "2025-11": [3, 10, 17, 24],
-    "2025-12": [1, 8, 15, 22]
-};
-
 const today = new Date();
 const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
 
-function generateCalendar(year, month, id) {
-    const first = new Date(year, month - 1, 1);
-    const last = new Date(year, month, 0);
-    const tbody = document.getElementById(id);
-    if (!tbody) return;
+const closedDays = {
+  "2025-11": [3, 10, 17, 24],
+  "2025-12": [1, 8, 15, 22],
+};
 
-    let html = "<tr>";
+function generateCalendar(year, month, id){
+  const first = new Date(year, month - 1, 1);
+  const last = new Date(year, month, 0);
+  const tbody = document.getElementById(id);
 
-    for (let i = 0; i < first.getDay(); i++) html += "<td></td>";
+  let html = "<tr>";
+  for (let i = 0; i < first.getDay(); i++) html += "<td></td>";
 
-    for (let d = 1; d <= last.getDate(); d++) {
-        const dateStr = `${year}-${month}-${d}`;
-        let cls = "";
+  for (let d = 1; d <= last.getDate(); d++){
+    const dateStr = `${year}-${month}-${d}`;
+    let cls = "";
 
-        if (closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
-        if (dateStr === todayStr) cls = "today";
+    if (closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
+    if (dateStr === todayStr) cls = "today";
 
-        html += `<td class="${cls}">${d}</td>`;
+    html += `<td class="${cls}">${d}</td>`;
 
-        if (new Date(year, month - 1, d).getDay() === 6) html += "</tr><tr>";
-    }
-
-    html += "</tr>";
-    tbody.innerHTML = html;
+    if (new Date(year, month - 1, d).getDay() === 6) html += "</tr><tr>";
+  }
+  html += "</tr>";
+  tbody.innerHTML = html;
 }
 
 generateCalendar(2025, 11, "month11");
