@@ -38,12 +38,10 @@ h1 {
     width: 420px;
     padding: 28px;
     border-radius: 20px;
-
-    /* A案：淡いグラデーション＋立体シャドウ */
-    background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    box-shadow: 
-        8px 8px 20px rgba(0,0,0,0.10),
-        -4px -4px 12px rgba(255,255,255,0.8);
+    background: linear-gradient(145deg, #ffffff, #f1f1f1);
+    box-shadow:
+        6px 6px 18px rgba(0,0,0,0.08),
+        -4px -4px 12px rgba(255,255,255,0.9);
 }
 
 .calendar-box h2 {
@@ -65,11 +63,11 @@ th {
     font-weight: 500;
 }
 
-/* 日付セル */
+/* 日付セル（通常） */
 td {
     width: 45px;
     height: 45px;
-    border-radius: 12px; /* ←楕円じゃなく柔らかい丸角 */
+    border-radius: 10px;
     text-align: center;
     vertical-align: middle;
     color: #444;
@@ -77,26 +75,25 @@ td {
     transition: 0.2s ease;
 }
 
-/* ホバー効果（プロ感UP） */
+/* ホバー */
 td:hover {
-    background: #eaeaea;
-    cursor: default;
+    background: #e9e9e9;
 }
 
-/* 今日（青・光沢グラデ） */
+/* ★ 本日：控えめ＋上品な青グラデ */
 .today {
-    background: radial-gradient(circle at 30% 30%, #a7d4ff, #5aaaff);
+    background: linear-gradient(145deg, #bcd9ff, #92bfff);
     color: #fff !important;
     font-weight: 600;
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.15);
 }
 
-/* 休業日（赤・光沢グラデ） */
+/* ★ 休業日：彩度低めのピンク系で主張しすぎない */
 .closed {
-    background: radial-gradient(circle at 30% 30%, #ffb4b4, #ff6b6b);
+    background: linear-gradient(145deg, #ffcccc, #ff9999);
     color: #fff !important;
     font-weight: 600;
-    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.25);
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.15);
 }
 
 /* 下部説明エリア */
@@ -108,8 +105,8 @@ td:hover {
     border-radius: 20px;
 
     background: #ffffff;
-    box-shadow: 
-        8px 8px 20px rgba(0,0,0,0.10),
+    box-shadow:
+        6px 6px 18px rgba(0,0,0,0.08),
         -4px -4px 12px rgba(255,255,255,0.9);
     text-align: left;
     line-height: 1.75;
@@ -131,16 +128,16 @@ td:hover {
 .dot {
     width: 15px;
     height: 15px;
-    border-radius: 12px;
+    border-radius: 10px;
     margin-right: 10px;
 }
 
 .dot-red {
-    background: radial-gradient(circle at 30% 30%, #ffb4b4, #ff6b6b);
+    background: linear-gradient(145deg, #ffcccc, #ff9999);
 }
 
 .dot-blue {
-    background: radial-gradient(circle at 30% 30%, #a7d4ff, #5aaaff);
+    background: linear-gradient(145deg, #bcd9ff, #92bfff);
 }
 </style>
 </head>
@@ -185,6 +182,7 @@ td:hover {
     </p>
 </div>
 
+
 <script>
 /* 祝日データ（2025年11〜12月）*/
 const holidays = [
@@ -210,24 +208,16 @@ function createCalendar(year, month, bodyId, titleId) {
         let cls = "";
 
         /* 今日（優先） */
-        if (dateStr === todayStr) {
-            cls = "today";
-        }
+        if (dateStr === todayStr) cls = "today";
 
         /* 土日 → 休業 */
-        if (dow === 0 || dow === 6) {
-            cls = "closed";
-        }
+        if (dow === 0 || dow === 6) cls = "closed";
 
         /* 祝日 → 休業 */
-        if (holidays.includes(dateStr)) {
-            cls = "closed";
-        }
+        if (holidays.includes(dateStr)) cls = "closed";
 
-        /* 今日が休業扱いになるのを防ぐ（上書きを避ける） */
-        if (dateStr === todayStr) {
-            cls = "today";
-        }
+        /* 今日が休業扱いになるのを防ぐ */
+        if (dateStr === todayStr) cls = "today";
 
         html += `<td class="${cls}">${d}</td>`;
         if (dow === 6) html += "</tr><tr>";
