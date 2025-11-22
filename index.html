@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>営業日カレンダー</title>
+<style>
+  body { font-family: sans-serif; margin: 40px; }
+  .wrapper { display: flex; gap: 40px; }
+  .cal { padding: 25px; border: 1px solid #eee; border-radius: 16px; width: 360px; }
+  .cal h2 { text-align: center; }
+  table { width: 100%; border-collapse: collapse; text-align: center; }
+  th { padding: 8px; color: #555; }
+  td { padding: 10px; border-radius: 50%; }
+  td.closed { background: #ff8a8a; color: #fff; font-weight: bold; }
+  td.today { border: 2px solid #4da3ff; font-weight: bold; }
+  .legend { margin-top: 40px; padding: 20px; background: #fafafa; border-radius: 12px; border: 1px solid #eee; }
+  .dot { display:inline-block; width:12px; height:12px; border-radius:50%; margin-right:6px; }
+  .dot.closed { background:#ff8a8a; }
+  .dot.today { background:#4da3ff; }
+</style>
+</head>
+
+<body>
+
+<h1>営業日カレンダー</h1>
+
+<div class="wrapper">
+  <div class="cal">
+    <h2 id="m1-title"></h2>
+    <table>
+      <thead>
+        <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
+      </thead>
+      <tbody id="m1"></tbody>
+    </table>
+  </div>
+
+  <div class="cal">
+    <h2 id="m2-title"></h2>
+    <table>
+      <thead>
+        <tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>
+      </thead>
+      <tbody id="m2"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="legend">
+  <p><span class="dot closed"></span>休業日 ー 発送・お問い合わせ返信を行っておりません</p>
+  <p><span class="dot today"></span>本日</p>
+</div>
+
+<script>
+const closedDays = {
+  "2025-11": [3, 10, 17, 24],
+  "2025-12": [1, 8, 15, 22]
+};
+
+function createCalendar(year, month, id){
+  const tbody = document.getElementById(id);
+  const title = document.getElementById(id+"-title".replace("m","m1").replace("m",""));
+
+  const date = new Date(year, month-1, 1);
+  const last = new Date(year, month, 0).getDate();
+
+  document.getElementById(id+"-title").textContent = `${year}年 ${month}月`;
+
+  let html = "<tr>";
+  for(let i=0;i<date.getDay();i++) html += "<td></td>";
+
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+
+  for(let d=1; d<=last; d++){
+    const dStr = `${year}-${month}-${d}`;
+    let cls = "";
+
+    if(closedDays[`${year}-${month}`]?.includes(d)) cls = "closed";
+    if(dStr === todayStr) cls = "today";
+
+    html += `<td class="${cls}">${d}</td>`;
+
+    if(new Date(year, month-1, d).getDay() === 6){
+      html += "</tr><tr>";
+    }
+  }
+  html += "</tr>";
+
+  tbody.innerHTML = html;
+}
+
+createCalendar(2025, 11, "m1");
+createCalendar(2025, 12, "m2");
+</script>
+
+</body>
+</html>
