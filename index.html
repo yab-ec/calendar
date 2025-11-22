@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ONLINE SHOP 営業日カレンダー</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
@@ -14,14 +13,13 @@ body {
     background: #f5f5f5;
     margin: 0;
     padding: 40px 0;
-    color: #333;
     text-align: center;
+    color: #333;
 }
 
 /* タイトル */
 h1 {
     font-size: 28px;
-    font-weight: 600;
     margin-bottom: 35px;
 }
 
@@ -33,21 +31,19 @@ h1 {
     flex-wrap: wrap;
 }
 
-/* カレンダー内部のカード */
+/* カレンダーカード */
 .calendar-box {
     width: 420px;
     padding: 28px;
     border-radius: 20px;
-
     background: linear-gradient(145deg, #ffffff, #f0f0f0);
-    box-shadow:
+    box-shadow: 
         8px 8px 20px rgba(0,0,0,0.10),
         -4px -4px 12px rgba(255,255,255,0.8);
 }
 
 .calendar-box h2 {
     font-size: 20px;
-    font-weight: 600;
     margin-bottom: 18px;
 }
 
@@ -55,12 +51,11 @@ h1 {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 15px;
 }
 
 th {
     padding-bottom: 10px;
-    color: #666;
+    color: #555;
     font-weight: 500;
 }
 
@@ -71,35 +66,22 @@ td {
     border-radius: 12px;
     text-align: center;
     vertical-align: middle;
-    color: #444;
-    font-weight: 400;
-    transition: none;  /* ← ホバー無効化 */
+    font-size: 15px;
+    transition: none; /* ←ホバー凹みエフェクト削除 */
 }
 
-/* ★休日（赤）をより視認性UP */
+/* 休業日：赤 */
 .closed {
-    background: linear-gradient(135deg, #ff8a8a, #ff5454);
-    color: white !important;
+    background: #ff6b6b;
+    color: #fff;
     font-weight: 600;
-    border: 2px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 3px 6px rgba(255, 80, 80, 0.35);
 }
 
-/* ★本日は青いリング（中は透明） */
+/* 本日：青枠のみ */
 .today {
-    color: #1d75ff !important;
-    font-weight: 700;
-    border: 3px solid #1d75ff !important;
-    background: transparent !important;
-}
-
-/* 休日に today が重なった時 → 赤背景は残しつつ青枠を上に乗せる */
-.closed.today {
-    background: linear-gradient(135deg, #ff8a8a, #ff5454) !important;
-    border: 3px solid #1d75ff !important;
-    color: #fff !important;
-    position: relative;
-    z-index: 10;
+    border: 2px solid #4da3ff;
+    font-weight: 600;
+    color: #4da3ff;
 }
 
 /* 下部説明エリア */
@@ -108,27 +90,19 @@ td {
     max-width: 900px;
     margin: 45px auto 0;
     padding: 30px 35px;
-    border-radius: 20px;
     background: #ffffff;
-    box-shadow:
+    border-radius: 20px;
+    box-shadow: 
         8px 8px 20px rgba(0,0,0,0.10),
         -4px -4px 12px rgba(255,255,255,0.9);
     text-align: left;
-    line-height: 1.75;
 }
 
-.info-box h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 15px;
-}
-
-/* マーカー説明（横並び） */
-.legend-row {
+/* マーカー横並び */
+.legend {
     display: flex;
-    align-items: center;
     gap: 25px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
 }
 
 .legend-item {
@@ -140,19 +114,11 @@ td {
     width: 15px;
     height: 15px;
     border-radius: 12px;
-    margin-right: 8px;
+    margin-right: 10px;
 }
 
-/* 休日マーカー（赤） */
-.dot-red {
-    background: linear-gradient(135deg, #ff8a8a, #ff5454);
-}
-
-/* 本日マーカー（青枠） */
-.dot-blue {
-    border: 3px solid #1d75ff;
-    background: transparent;
-}
+.dot-red { background: #ff6b6b; }
+.dot-blue { border: 2px solid #4da3ff; background: transparent; }
 </style>
 </head>
 
@@ -181,49 +147,59 @@ td {
 </div>
 
 <div class="info-box">
+    <h3>営業日・休業日のご案内</h3>
 
-    <!-- 横並びのマーカー説明 -->
-    <div class="legend-row">
+    <div class="legend">
         <div class="legend-item"><span class="dot dot-red"></span>休業日</div>
         <div class="legend-item"><span class="dot dot-blue"></span>本日</div>
     </div>
 
-    <p><strong>休業日＝発送・お問い合わせへの返信不可日となります。</strong></p>
-
-    <p>ご注文およびお問い合わせの送信自体は、<strong>365日24時間いつでも受け付けております。</strong></p>
-
+    <p><strong>休業日＝発送・お問い合わせへのご返信は原則お休みとなります。</strong></p>
+    <p>ご注文やお問い合わせの送信自体は<strong>365日24時間いつでも受け付けております。</strong></p>
 </div>
 
 <script>
-/* 祝日データ（2025年11〜12月）*/
+/* 祝日＋臨時休業日（ここを増やすだけ！） */
 const holidays = [
     "2025-11-03",
-    "2025-11-23"
+    "2025-11-23",
+    // ↓ここに追加
+    // "2025-12-31",
+    // "2026-01-01"
 ];
 
-/* カレンダー作成関数 */
+/* カレンダー作成 */
 function createCalendar(year, month, bodyId, titleId) {
     const first = new Date(year, month, 1);
     const last = new Date(year, month + 1, 0).getDate();
     const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
     document.getElementById(titleId).textContent = `${year}年 ${month+1}月`;
 
     let html = "<tr>";
+
     for (let i = 0; i < first.getDay(); i++) html += "<td></td>";
 
     for (let d = 1; d <= last; d++) {
         const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const dow = new Date(year, month, d).getDay();
-        let cls = [];
 
-        if (dow === 0 || dow === 6) cls.push("closed");
-        if (holidays.includes(dateStr)) cls.push("closed");
-        if (dateStr === todayStr) cls.push("today");
+        let cls = "";
 
-        html += `<td class="${cls.join(" ")}">${d}</td>`;
+        /* 本日（最優先） */
+        if (dateStr === todayStr) cls = "today";
 
+        /* 土日＝休業 */
+        if (dow === 0 || dow === 6) cls = "closed";
+
+        /* 祝日・臨時休業 */
+        if (holidays.includes(dateStr)) cls = "closed";
+
+        /* 今日が休業日扱いにならないよう再適用 */
+        if (dateStr === todayStr) cls = "today";
+
+        html += `<td class="${cls}">${d}</td>`;
         if (dow === 6) html += "</tr><tr>";
     }
 
